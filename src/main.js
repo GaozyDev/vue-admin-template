@@ -35,8 +35,11 @@ Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
 // 可以拿到当前的环境
-console.log(process.env)
-
+// console.log(process.env)
+//引入相关API请求接口
+import API from "@/api";
+//将其挂在组件实例的原型上，好处是任何组件都可以使用API相关的接口
+Vue.prototype.$API = API
 new Vue({
   el: '#app',
   router,
