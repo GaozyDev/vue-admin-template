@@ -22,8 +22,8 @@ export const reqAddOrUpdateTradeMark = (tradeMark)=>{
 }
 
 //删除品牌接口
-// /admin/product/baseTrademark/remove/{id} get 携带三个参数：id、名称、LOGO
-
+// /admin/product/baseTrademark/remove/{id} delete 携带三个参数：id、名称、LOGO
+export const reqDeleteTradeMark = (id)=>request({url:`/admin/product/baseTrademark/remove/${id}`,method:'delete'})
 //接口
 // /admin/product/baseTrademark/findBaseTrademarkByKeyword/{keyword} get
 
