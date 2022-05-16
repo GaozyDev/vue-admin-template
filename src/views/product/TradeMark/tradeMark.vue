@@ -57,29 +57,33 @@
     :visible.sync:控制对话框显示与隐藏
     -->
     <el-dialog title="添加品牌" :visible.sync="dialogFormVisible">
-      <el-form style="width: 80%">
+      <!--表单 :model="tmForm" :model属性的意思是，把表单的数据收集到tmForm的身上，表单验证也需要这个属性-->
+      <el-form style="width: 80%" :model="tmForm">
         <el-form-item label="品牌名称" label-width="100px">
-          <el-input autocomplete="off"></el-input>
+          <el-input autocomplete="off" v-model="tmForm.tmName"></el-input>
         </el-form-item>
         <el-form-item label="品牌LOGO" label-width="100px">
-        <!--
-
-          -->
-        <el-upload
-          class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
+          <!--
+            这里收集数据不能使用v-model，因为不是表单元素
+            action:设置图片上传的地址
+            :on-success="handleAvatarSuccess"：可以检测到图片上传成功，当图片上传成功，会执行一次
+            :before-upload="beforeAvatarUpload"：在图片上传之前会执行一次
+            -->
+          <el-upload
+            class="avatar-uploader"
+            action="/dev-api/admin/product/fileUpload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="tmForm.logoUrl" :src="tmForm.logoUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addOrUpdateTradeMark">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -101,7 +105,12 @@ export default {
       //对话框显示与隐藏
       dialogFormVisible: false,
       //上传图片使用的属性
-      imageUrl: ''
+      // imageUrl: '',
+      //收集品牌信息：对象身上的属性不能瞎写，需要看文档
+      tmForm: {
+        tmName: '',
+        logoUrl: ''
+      }
     }
   },
   //组件挂载完毕发请求
@@ -130,16 +139,23 @@ export default {
     },
     //点击添加品牌按钮
     showDialog() {
+      //显示对话框
       this.dialogFormVisible = true
+      //清除数据
+      this.tmForm = {tmName: '', logoUrl: ''}
     },
     //修改某一个品牌
     updateTradeMark() {
       this.dialogFormVisible = true
     },
-    //上传图片相关的回调
+    //上传图片成功
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      //res:上传成功之后，服务器返回的数据
+      //file：上传成功之后，服务器返回的数据
+      //收集品牌图片数据，将来带给服务器
+      this.tmForm.logoUrl = res.data
     },
+    //图片上传之前
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -151,6 +167,23 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
+    },
+    //确定按钮：添加|修改品牌
+    async addOrUpdateTradeMark() {
+      //关闭对话框
+      this.dialogFormVisible = false
+      //发请求（添加|修改品牌）
+      try {
+        let result = await this.$API.tradeMark.reqAddOrUpdateTradeMark(this.tmForm)
+        if (result.code == 200) {
+          //弹出信息：添加品牌成功|修改品牌成功
+          this.$message(this.tmForm.id ? '修改品牌成功' : '添加品牌成功')
+          //操作成功之后，获取品牌列表
+          this.getPageList()
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
