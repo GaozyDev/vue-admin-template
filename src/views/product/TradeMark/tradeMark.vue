@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column prop="prop" label="操作" width="width">
         <template slot-scope="{row,$index}">
-          <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateTradeMark">修改</el-button>
+          <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateTradeMark(row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
         </template>
       </el-table-column>
@@ -56,7 +56,7 @@
     对话框
     :visible.sync:控制对话框显示与隐藏
     -->
-    <el-dialog title="添加品牌" :visible.sync="dialogFormVisible">
+    <el-dialog :title="tmForm.id?'修改品牌':'添加品牌'" :visible.sync="dialogFormVisible">
       <!--表单 :model="tmForm" :model属性的意思是，把表单的数据收集到tmForm的身上，表单验证也需要这个属性-->
       <el-form style="width: 80%" :model="tmForm">
         <el-form-item label="品牌名称" label-width="100px">
@@ -145,8 +145,11 @@ export default {
       this.tmForm = {tmName: '', logoUrl: ''}
     },
     //修改某一个品牌
-    updateTradeMark() {
+    updateTradeMark(row) {
+      //row:用户选中的品牌的信息
       this.dialogFormVisible = true
+      //将已有的品牌信息赋值给tmForm在界面进行展示
+      this.tmForm = {...row}
     },
     //上传图片成功
     handleAvatarSuccess(res, file) {
@@ -177,9 +180,9 @@ export default {
         let result = await this.$API.tradeMark.reqAddOrUpdateTradeMark(this.tmForm)
         if (result.code == 200) {
           //弹出信息：添加品牌成功|修改品牌成功
-          this.$message(this.tmForm.id ? '修改品牌成功' : '添加品牌成功')
+          this.$message.success(this.tmForm.id ? '修改品牌成功' : '添加品牌成功')
           //操作成功之后，获取品牌列表
-          this.getPageList()
+          this.getPageList(this.tmForm.id?this.page:1)
         }
       } catch (error) {
         console.log(error)
