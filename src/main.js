@@ -38,8 +38,11 @@ Vue.config.productionTip = false
 // console.log(process.env)
 //引入相关API请求接口
 import API from "@/api";
+import CategorySelect from "@/components/CategorySelect/categorySelect";
 //将其挂在组件实例的原型上，好处是任何组件都可以使用API相关的接口
 Vue.prototype.$API = API
+//注册为全局组件
+Vue.component(CategorySelect.name,CategorySelect)
 new Vue({
   el: '#app',
   router,

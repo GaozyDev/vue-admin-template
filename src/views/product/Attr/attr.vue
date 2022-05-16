@@ -1,6 +1,9 @@
 <template>
   <div>
-    attr管理
+    <el-card style="margin: 20px 0px">
+      <CategorySelect></CategorySelect>
+    </el-card>
+    <el-card></el-card>
   </div>
 </template>
 
