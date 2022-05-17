@@ -55,8 +55,14 @@ export default {
     },
     //一级分类的select的事件回调：当一级分类的option发生变化的时候获取二级分类的数据
     async handler1() {
+      //清除数据
+      this.list2 = [],
+      this.list3 = [],
+      this.cForm.category2Id = '',
+      this.cForm.category3Id = ''
       //解构出一级分类的id
       const {category1Id} = this.cForm
+      this.$emit('getCategoryId', {categoryId:category1Id,level:1})
       let result = await this.$API.attr.reqCategory2List(category1Id)
       if(result.code==200) {
         this.list2 = result.data
@@ -64,7 +70,11 @@ export default {
     },
     //二级分类的select的事件回调：当二级分类的option发生变化的时候获取三级分类的数据
     async handler2() {
+      //清除数据
+      this.list3 = [],
+      this.cForm.category3Id = ''
       const {category2Id} = this.cForm
+      this.$emit('getCategoryId',{categoryId:category2Id,level:2})
       let result = await this.$API.attr.reqCategory3List(category2Id)
       if(result.code==200) {
         this.list3 = result.data
@@ -72,7 +82,10 @@ export default {
     },
     //三级分类的select的事件回调
     handler3() {
-
+      //获取三级分类的id
+      //解构出数据
+      const {category3Id} = this.cForm
+      this.$emit('getCategoryId',{categoryId:category3Id,level:3})
     }
   }
 }
