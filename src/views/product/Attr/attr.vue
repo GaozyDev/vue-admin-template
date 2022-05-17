@@ -149,6 +149,14 @@ export default {
       //将选中的属性复制给attrInfo
       //由于数据结构里面存在对象里面套数组，数组里面套对象，因此需要深拷贝
       this.attrInfo = cloneDeep(row)
+      //修改某一个属性，将相应的属性值元素添加flag元素
+      this.attrInfo.attrValueList.forEach(item=>{
+        //这样也可以给属性值添加flag字段，但是视图不会跟着改变，因为flag不是响应式数据
+        //Vue 无法探测普通的新增 property
+        // item.flag = false
+        //第一个参数：哪个对象；第二个参数：添加新的响应式属性；第三个参数：新的属性的属性值
+        this.$set(item,'flag',false)
+      })
     },
     //失去焦点的回调
     //row是用户添加的最新的属性值
