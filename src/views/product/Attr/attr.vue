@@ -35,9 +35,9 @@
             <el-input placeholder="请输入属性名" v-model="attrInfo.attrName"></el-input>
           </el-form-item>
         </el-form>
-        <el-button type="primary" icon="el-icon-plus">添加属性值</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addAttrValue" :disabled="!attrInfo.attrName">添加属性值</el-button>
         <el-button @click="isShowTable=true">取消</el-button>
-        <el-table style="width: 100%;margin:20px 0px" border>
+        <el-table style="width: 100%;margin:20px 0px" border :data="attrInfo.attrValueList">
           <el-table-column
             align="center"
             type="index"
@@ -48,11 +48,17 @@
             prop="prop"
             label="属性值名称"
             width="width">
+            <template slot-scope="{row,$index}">
+              <el-input v-model="row.valueName" placeholder="请输入属性值名称" size="mini"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             prop="prop"
             label="操作"
             width="width">
+            <template slot-scope="{row,$index}">
+              <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            </template>
           </el-table-column>
         </el-table>
         <el-button type="primary">保存</el-button>
@@ -78,10 +84,10 @@ export default {
       attrInfo: {
         attrName:'',//属性名
         attrValueList: [//属性值，因为属性值可以有多个，所以用数组
-          {
-            attrId:0,//相应的属性名的id
-            valueName:'string',
-          }
+          // {
+          //   attrId:0,//相应的属性名的id
+          //   valueName:'',//属性值名称
+          // }
         ],
         categoryId:0,//三级分类的id
         categoryLevel: 3
@@ -113,6 +119,15 @@ export default {
       if (result.code == 200) {
         this.attrList = result.data
       }
+    },
+    //添加属性值的回调
+    addAttrValue() {
+      //向属性值的数组里面添加元素
+      //attrId:对应的属性的id，目前是添加属性，还没有对应的属性id
+      this.attrInfo.attrValueList.push({
+        attrId:undefined,
+        attrName:''
+      })
     }
   }
 }
