@@ -5,7 +5,7 @@
     </el-card>
     <el-card>
       <div v-show="isShowTable">
-        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="isShowTable=false">添加属性
+        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="addAttr">添加属性
         </el-button>
         <!--表格：展示平台属性-->
         <el-table style="width: 100%" border :data="attrList">
@@ -35,7 +35,8 @@
             <el-input placeholder="请输入属性名" v-model="attrInfo.attrName"></el-input>
           </el-form-item>
         </el-form>
-        <el-button type="primary" icon="el-icon-plus" @click="addAttrValue" :disabled="!attrInfo.attrName">添加属性值</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addAttrValue" :disabled="!attrInfo.attrName">添加属性值
+        </el-button>
         <el-button @click="isShowTable=true">取消</el-button>
         <el-table style="width: 100%;margin:20px 0px" border :data="attrInfo.attrValueList">
           <el-table-column
@@ -82,14 +83,14 @@ export default {
       isShowTable: true,
       //收集新增属性|修改属性使用的
       attrInfo: {
-        attrName:'',//属性名
+        attrName: '',//属性名
         attrValueList: [//属性值，因为属性值可以有多个，所以用数组
           // {
           //   attrId:0,//相应的属性名的id
           //   valueName:'',//属性值名称
           // }
         ],
-        categoryId:0,//三级分类的id
+        categoryId: 0,//三级分类的id
         categoryLevel: 3
       }
     }
@@ -125,9 +126,26 @@ export default {
       //向属性值的数组里面添加元素
       //attrId:对应的属性的id，目前是添加属性，还没有对应的属性id
       this.attrInfo.attrValueList.push({
-        attrId:undefined,
-        attrName:''
+        attrId: undefined,
+        attrName: ''
       })
+    },
+    //添加属性按钮的回调
+    addAttr() {
+      //切换table显示与隐藏
+      this.isShowTable = false
+      //清除数据
+      this.attrInfo = {
+        attrName: '',//属性名
+        attrValueList: [//属性值，因为属性值可以有多个，所以用数组
+          // {
+          //   attrId:0,//相应的属性名的id
+          //   valueName:'',//属性值名称
+          // }
+        ],
+        categoryId: this.category3Id,//三级分类的id
+        categoryLevel: 3
+      }
     }
   }
 }
