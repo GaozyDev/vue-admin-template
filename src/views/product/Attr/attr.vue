@@ -22,7 +22,7 @@
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="150">
             <template slot-scope="{row,$index}">
-              <el-button type="warning" icon="el-icon-edit" size="mini" @click="isShowTable=false"></el-button>
+              <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateAttr(row)"></el-button>
               <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             </template>
           </el-table-column>
@@ -70,6 +70,8 @@
 </template>
 
 <script>
+//按需引入
+import cloneDeep from 'lodash/cloneDeep'
 export default {
   name: 'Attr',
   data() {
@@ -146,6 +148,14 @@ export default {
         categoryId: this.category3Id,//三级分类的id
         categoryLevel: 3
       }
+    },
+    //修改某一个属性
+    updateAttr(row) {
+      //isShowTable变为false
+      this.isShowTable = false
+      //将选中的属性复制给attrInfo
+      //由于数据结构里面存在对象里面套数组，数组里面套对象，因此需要深拷贝
+      this.attrInfo = cloneDeep(row)
     }
   }
 }
