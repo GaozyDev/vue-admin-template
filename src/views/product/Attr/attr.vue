@@ -151,7 +151,22 @@ export default {
       this.attrInfo = cloneDeep(row)
     },
     //失去焦点的回调
+    //row是用户添加的最新的属性值
     toLook(row) {
+      //属性值不能为空，如果为空需要给用户提示
+      if(row.valueName.trim()=='') {
+        this.$message('请输入正确的属性值')
+        return
+      }
+      //新增的属性值不能与已有的属性值重复
+      let isRepat = this.attrInfo.attrValueList.some(item=>{
+        //判断的时候将row从数组里面去除
+        if(row!==item) {
+          return row.valueName == item.valueName
+        }
+      })
+      if(isRepat) return
+      //编辑模式变为查看模式
       row.flag = false
     }
   }
