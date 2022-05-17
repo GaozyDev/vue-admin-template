@@ -39,24 +39,16 @@
         </el-button>
         <el-button @click="isShowTable=true">取消</el-button>
         <el-table style="width: 100%;margin:20px 0px" border :data="attrInfo.attrValueList">
-          <el-table-column
-            align="center"
-            type="index"
-            label="序号"
-            width="80">
+          <el-table-column align="center" type="index" label="序号" width="80">
           </el-table-column>
-          <el-table-column
-            prop="prop"
-            label="属性值名称"
-            width="width">
+          <el-table-column prop="prop" label="属性值名称" width="width">
             <template slot-scope="{row,$index}">
-              <el-input v-model="row.valueName" placeholder="请输入属性值名称" size="mini"></el-input>
+              <!--这里需要用到span与input来回切换-->
+              <el-input v-model="row.valueName" placeholder="请输入属性值名称" size="mini" v-if="row.flag" @blur="toLook(row)" @keyup.native.enter="toLook(row)"></el-input>
+              <span v-else @click="row.flag=true" style="display: block">{{row.valueName}}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="prop"
-            label="操作"
-            width="width">
+          <el-table-column prop="prop" label="操作" width="width">
             <template slot-scope="{row,$index}">
               <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             </template>
@@ -128,8 +120,9 @@ export default {
       //向属性值的数组里面添加元素
       //attrId:对应的属性的id，目前是添加属性，还没有对应的属性id
       this.attrInfo.attrValueList.push({
-        attrId: undefined,
-        attrName: ''
+        attrId: this.attrInfo.id,//对于修改某一个属性，可以在已有的属性值上增加新的属性（新增的属性值要把已有的属性id带上）
+        attrName: '',
+        flag:true
       })
     },
     //添加属性按钮的回调
@@ -156,6 +149,10 @@ export default {
       //将选中的属性复制给attrInfo
       //由于数据结构里面存在对象里面套数组，数组里面套对象，因此需要深拷贝
       this.attrInfo = cloneDeep(row)
+    },
+    //失去焦点的回调
+    toLook(row) {
+      row.flag = false
     }
   }
 }
