@@ -44,8 +44,14 @@
           <el-table-column prop="prop" label="属性值名称" width="width">
             <template slot-scope="{row,$index}">
               <!--这里需要用到span与input来回切换-->
-              <el-input v-model="row.valueName" placeholder="请输入属性值名称" size="mini" v-if="row.flag" @blur="toLook(row)" @keyup.native.enter="toLook(row)"></el-input>
-              <span v-else @click="row.flag=true" style="display: block">{{row.valueName}}</span>
+              <el-input
+                v-model="row.valueName"
+                placeholder="请输入属性值名称"
+                size="mini" v-if="row.flag"
+                @blur="toLook(row)"
+                @keyup.native.enter="toLook(row)"
+                :ref="$index"></el-input>
+              <span v-else @click="toEdit(row,$index)" style="display: block">{{row.valueName}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="width">
@@ -124,6 +130,9 @@ export default {
         attrName: '',
         flag:true
       })
+      this.$nextTick(()=>{
+        this.$refs[this.attrInfo.attrValueList.length-1].focus()
+      })
     },
     //添加属性按钮的回调
     addAttr() {
@@ -176,6 +185,16 @@ export default {
       if(isRepat) return
       //编辑模式变为查看模式
       row.flag = false
+    },
+    //点击span的回调，变为编辑模式
+    toEdit(row,index) {
+      row.flag = true
+      //获取input节点，实现自动聚焦
+      //点击span，切换为input模式，对于浏览器而言，页面重绘与重排是耗时间的，不可能点击的一瞬间就立马获取到input
+      this.$nextTick(()=>{
+        //获取相应的input表单元素实现聚焦
+        this.$refs[index].focus()
+      })
     }
   }
 }
