@@ -6,7 +6,7 @@
     </el-card>
     <el-card>
       <!--底部由三部分进行切换-->
-      <div>
+      <div v-show="scene==0">
         <!--展示spu列表结构-->
         <el-button type="primary" icon="el-icon-plus">添加spu</el-button>
         <el-table style="width: 100%" border :data="records">
@@ -50,13 +50,22 @@
         >
         </el-pagination>
       </div>
+      <SpuForm v-show="scene==1"></SpuForm>
+      <SkuForm v-show="scene==2"></SkuForm>
     </el-card>
   </div>
 </template>
 
 <script>
+//引入子组件
+import SkuForm from "@/views/product/Spu/SkuForm/SkuForm";
+import SpuForm from "@/views/product/Spu/SpuForm/SpuForm";
 export default {
   name: 'Spu',
+  components:{
+    SpuForm,
+    SkuForm
+  },
   data() {
     return {
       //分别是分类的id
@@ -69,6 +78,7 @@ export default {
       limit:3,//每一页展示多少条数据
       records:[],//spu列表的数据
       total:0,//分页器一共需要展示多少条数据
+      scene:0,//0:展示spu列表数据 1：添加spu|修改spu 3：添加sku
     }
   },
   methods: {
