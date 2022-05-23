@@ -8,7 +8,7 @@
       <!--底部由三部分进行切换-->
       <div v-show="scene==0">
         <!--展示spu列表结构-->
-        <el-button type="primary" icon="el-icon-plus">添加spu</el-button>
+        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="addSpu">添加spu</el-button>
         <el-table style="width: 100%" border :data="records">
           <el-table-column type="index" label="序号" width="80" align="center">
           </el-table-column>
@@ -20,9 +20,9 @@
             <template slot-scope="{row,$index}">
               <!--这些按钮将来会用hintButton进行替换-->
               <hint-button type="success" icon="el-icon-plus" size="mini" title="添加sku"></hint-button>
-              <el-button type="warning" icon="el-icon-edit" size="mini" title="修改sku"></el-button>
-              <el-button type="info" icon="el-icon-info" size="mini"  title="查看当前spu全部sku列表"></el-button>
-              <el-button type="danger" icon="el-icon-delete" size="mini" title="删除spu"></el-button>
+              <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改sku" @click="updateSpu(row)"></hint-button>
+              <hint-button type="info" icon="el-icon-info" size="mini"  title="查看当前spu全部sku列表"></hint-button>
+              <hint-button type="danger" icon="el-icon-delete" size="mini" title="删除spu"></hint-button>
             </template>
           </el-table-column>
         </el-table>
@@ -122,6 +122,14 @@ export default {
         this.total = result.data.total
         this.records = result.data.records
       }
+    },
+    //添加spu按钮的回调
+    addSpu() {
+      this.scene = 1
+    },
+    //修改某一个spu
+    updateSpu(row) {
+      this.scene = 1
     }
   }
 }
