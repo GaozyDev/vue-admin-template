@@ -19,8 +19,8 @@
           <el-table-column prop="prop" label="操作" width="width">
             <template slot-scope="{row,$index}">
               <!--这些按钮将来会用hintButton进行替换-->
-              <hint-button type="success" icon="el-icon-plus" size="mini" title="添加sku"></hint-button>
-              <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改sku" @click="updateSpu(row)"></hint-button>
+              <hint-button type="success" icon="el-icon-plus" size="mini" title="添加sku" @click="addSku(row)"></hint-button>
+              <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改spu" @click="updateSpu(row)"></hint-button>
               <hint-button type="info" icon="el-icon-info" size="mini"  title="查看当前spu全部sku列表"></hint-button>
               <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="deleteSpu(row)">
                 <hint-button slot="reference" type="danger" icon="el-icon-delete" size="mini" title="删除spu"></hint-button>
@@ -154,6 +154,11 @@ export default {
         //此处有bug
         this.getSpuList(this.records.length > 1 ?this.page:this.page-1)
       }
+    },
+    //添加sku按钮的回调
+    addSku(row) {
+      //切换场景为2
+      this.scene = 2
     }
   }
 }
