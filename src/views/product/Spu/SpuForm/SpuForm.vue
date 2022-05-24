@@ -50,17 +50,18 @@
                 {{ tag.saleAttrValueName }}
               </el-tag>
               <!--@keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"-->
+                -->
               <el-input
                 class="input-new-tag"
                 v-if="row.inputVisible"
                 v-model="row.inputValue"
                 ref="saveTagInput"
                 size="small"
+                @blur="handleInputConfirm(row)"
               >
               </el-input>
               <!-- @click="showInput"-->
-              <el-button v-else class="button-new-tag" size="small">添加</el-button>
+              <el-button v-else class="button-new-tag" size="small" @click="addSaleAttrValue(row)">添加</el-button>
             </template>
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="width">
@@ -191,6 +192,34 @@ export default {
       let newSaleAttr = {baseSaleAttrId,saleAttrName,spuSaleAttrValueList:[]}
       //添加新的销售属性
       this.spu.spuSaleAttrList.push(newSaleAttr)
+      //清空数据
+      this.attrIdAndAttrName = ''
+    },
+    //添加按钮的回调
+    addSaleAttrValue(row) {
+      //点击销售属性值的添加按钮时，需要由button变为input，通过inputVisible控制
+      this.$set(row,'inputVisible',true)
+      //通过响应式数据inputValue字段收集新增的销售属性值
+      this.$set(row,'inputValue','')
+    },
+    //el-input失去焦点的回调
+    handleInputConfirm(row) {
+      //解构出需要收集的数据
+      const {baseSaleAttrId,inputValue} = row
+      //新增的销售属性值名称不能为空
+      if(inputValue.trim()==''){
+        this.$message('属性值不能为空')
+        return
+      }
+      //新增的属性值不能重复，也可以用some
+      let result = row.spuSaleAttrValueList.every(item=>item.saleAttrValueName!=inputValue)
+      if(!result) return
+      //新增的销售属性值
+      let newSaleAttrValue = {baseSaleAttrId,saleAttrValueName:inputValue}
+      //新增
+      row.spuSaleAttrValueList.push(newSaleAttrValue)
+      //显示button
+      row.inputVisible = false
     }
   },
   computed: {
