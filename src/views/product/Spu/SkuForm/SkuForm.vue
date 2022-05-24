@@ -68,6 +68,36 @@
 <script>
 export default {
   name: '',
+  data() {
+    return {
+      //存储图片的信息
+      spuImageList: [],
+      //存储销售属性
+      spuSaleAttrList: [],
+      //存储平台属性
+      attrInfoList:[]
+    }
+  },
+  methods: {
+    //获取skuForm数据
+    async getData(category1Id, category2Id, spu) {
+      //获取图片的数据
+      let result1 = await this.$API.sku.reqSpuImageList(spu.id)
+      if (result1.code == 200) {
+        this.spuImageList = result1.data
+      }
+      //获取销售属性数据
+      let result2 = await this.$API.sku.reqSpuSaleAttrInfoList(spu.id)
+      if (result2.code == 200) {
+        this.spuSaleAttrList = result2.data
+      }
+      //获取平台属性
+      let result3 = await this.$API.sku.reqAttrInfoList(category1Id,category2Id,spu.category3Id)
+      if (result3.code == 200) {
+        this.attrInfoList = result3.data
+      }
+    }
+  }
 }
 
 </script>
