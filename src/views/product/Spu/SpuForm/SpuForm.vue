@@ -41,12 +41,13 @@
           </el-table-column>
           <el-table-column prop="prop" label="属性值名称列表" width="width">
             <template slot-scope="{row,$index}">
-              <!--@close="handleClose(tag)"-->
+              <!---->
               <el-tag
                 :key="tag.id"
-                v-for="tag in row.spuSaleAttrValueList"
+                v-for="(tag,index) in row.spuSaleAttrValueList"
                 closable
-                :disable-transitions="false">
+                :disable-transitions="false"
+                @close="row.spuSaleAttrValueList.splice(index,1)">
                 {{ tag.saleAttrValueName }}
               </el-tag>
               <!--@keyup.enter.native="handleInputConfirm"
@@ -66,7 +67,7 @@
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="width">
             <template slot-scope="{row,$index}">
-              <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" @click="spu.spuSaleAttrList.splice($index,1)"></el-button>
             </template>
           </el-table-column>
         </el-table>

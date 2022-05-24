@@ -2,7 +2,7 @@
   <div>
     <el-card style="margin: 20px 0px">
       <!--三级联动已经是全局组件了-->
-      <CategorySelect @getCategoryId="getCategoryId" :show="!show"></CategorySelect>
+      <CategorySelect @getCategoryId="getCategoryId" :show="scene!=0"></CategorySelect>
     </el-card>
     <el-card>
       <!--底部由三部分进行切换-->
@@ -72,8 +72,6 @@ export default {
       category1Id: '',
       category2Id: '',
       category3Id: '',
-      //控制三级联动的可操作性
-      show: true,
       page:1,//分页器当前是第几页
       limit:3,//每一页展示多少条数据
       records:[],//spu列表的数据
