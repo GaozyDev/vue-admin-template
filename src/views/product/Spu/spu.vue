@@ -135,7 +135,8 @@ export default {
     changeScene(scene) {
       //切换场景
       this.scene = scene
-      this.getSpuList()
+      //子组件通知父组件切换场景，需要再次获取spu列表数据进行展示
+      this.getSpuList(this.page)
     }
   }
 }
