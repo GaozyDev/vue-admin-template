@@ -124,6 +124,8 @@ export default {
     //添加spu按钮的回调
     addSpu() {
       this.scene = 1
+      //通知子组件发请求--两个请求
+      this.$refs.spu.addSpuData(this.category3Id)
     },
     //修改某一个spu
     updateSpu(row) {
@@ -132,11 +134,15 @@ export default {
       this.$refs.spu.initSpuDate(row)
     },
     //自定义事件的回调：spuform
-    changeScene(scene) {
+    changeScene({scene,flag}) {
       //切换场景
       this.scene = scene
       //子组件通知父组件切换场景，需要再次获取spu列表数据进行展示
-      this.getSpuList(this.page)
+      if(flag=='修改'){
+        this.getSpuList(this.page)
+      }else{
+        this.getSpuList(this.page=1)
+      }
     }
   }
 }
