@@ -135,6 +135,7 @@ export default {
     changeScene(scene) {
       //切换场景
       this.scene = scene
+      this.getSpuList()
     }
   }
 }

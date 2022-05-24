@@ -18,3 +18,14 @@ export const reqSpuImageList = (spuId)=>request({url:`/admin/product/spuImageLis
 //获取平台全部的销售属性---整个平台每个销售属性最多有三个
 // /admin/product/baseSaleAttrList get
 export const reqBaseSaleAttrList = ()=>request({url:`/admin/product/baseSaleAttrList`,method:'get'})
+
+//修改spu||添加spu：对于修改或者添加，携带的参数大致是一样的，唯一的区别就是携带的参数是否带id
+export const reqAddOrUpdateSpu = (spuInfo)=>{
+  //携带的参数带id--修改spu
+  if(spuInfo.id){
+    return request({url:`/admin/product/updateSpuInfo`,method:'post',data:spuInfo})
+  }else{
+    //携带的参数不带id--添加spu
+    return request({url:`/admin/product/saveSpuInfo`,method:'post',data:spuInfo})
+  }
+}

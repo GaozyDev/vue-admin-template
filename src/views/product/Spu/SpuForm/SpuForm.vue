@@ -73,7 +73,7 @@
         </el-table>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="addOrUpdateSpu">保存</el-button>
         <el-button @click="$emit('changeScene',0)">取消</el-button>
       </el-form-item>
     </el-form>
@@ -221,6 +221,25 @@ export default {
       row.spuSaleAttrValueList.push(newSaleAttrValue)
       //显示button
       row.inputVisible = false
+    },
+    //保存按钮的回调
+    async addOrUpdateSpu() {
+      //整理参数，除了照片，其他的参数都整理好了
+      //对于照片需要携带imgName和imgUrl字段
+      this.spu.spuImageList = this.spuImageList.map(item=>{
+        return {
+          imgName:item.name,
+          imgUrl:(item.response&&item.response.data)||item.url
+        }
+      })
+      //发请求
+      let result = await this.$API.spu.reqAddOrUpdateSpu(this.spu)
+      if(result.code==200){
+        //提示
+        this.$message({type:'success',message:'保存成功'})
+        //通知父组件回到场景0
+        this.$emit('changeScene',0)
+      }
     }
   },
   computed: {
