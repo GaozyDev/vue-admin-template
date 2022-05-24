@@ -14,12 +14,13 @@
       </el-form-item>
       <el-form-item label="SPU图片">
         <!--上传图片：action图片上传的地址 list-type:文件列表的类型 on-preview:点击文件列表中已上传的文件时的钩子 on-remove:文件列表移除文件时的钩子
-        file-list:上传的文件列表-->
+        file-list:上传的文件列表【是数组，数组里面的元素务必要有name和url属性】-->
         <el-upload
           action="/dev-api/admin/product/fileUpload"
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
+          :on-success="handleSuccess"
           :file-list="spuImageList">
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -130,12 +131,26 @@ export default {
     }
   },
   methods: {
+    //删除照片的回调
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      //file是删除的那张图片
+      //fileList是剩余的图片
+      // console.log(file, fileList);
+      //收集照片数据
+      //目前数据中有name和url字段，将来提交给服务器的数据要去掉这俩字段
+      this.spuImageList = fileList
     },
+    //照片墙预览的回调
     handlePictureCardPreview(file) {
+      //图片的地址
       this.dialogImageUrl = file.url;
+      //对话框显示
       this.dialogVisible = true;
+    },
+    //添加照片的回调
+    handleSuccess(response, file, fileList) {
+      //收集图片
+      this.spuImageList = fileList
     },
     //初始化SpuForm数据
     async initSpuDate(spu) {
