@@ -29,10 +29,10 @@
         </el-dialog>
       </el-form-item>
       <el-form-item label="销售属性">
-        <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrId">
-          <el-option :label="unselect.name" :value="unselect.id" v-for="(unselect,index) in unSelectSaleAttr" :key="unselect.id"></el-option>
+        <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrIdAndAttrName">
+          <el-option :label="unselect.name" :value="`${unselect.id}:${unselect.name}`" v-for="(unselect,index) in unSelectSaleAttr" :key="unselect.id"></el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-plus" :disabled="!attrId">添加销售属性</el-button>
+        <el-button type="primary" icon="el-icon-plus" :disabled="!attrIdAndAttrName" @click="addSaleAttr">添加销售属性</el-button>
         <!--展示的是当前spu属于自己的销售属性-->
         <el-table style="width: 100%" border :data="spu.spuSaleAttrList">
           <el-table-column type="index" label="序号" width="80px" align="center">
@@ -127,7 +127,7 @@ export default {
       tradeMarkList: [],//存储品牌的信息
       spuImageList: [],//存储spu图片
       saleAttrList: [],//获取平台全部的销售属性
-      attrId:'',//收集未选择的销售属性的id
+      attrIdAndAttrName:'',//收集未选择的销售属性的id
     }
   },
   methods: {
@@ -182,6 +182,15 @@ export default {
       if (saleResult.code = 200) {
         this.saleAttrList = saleResult.data
       }
+    },
+    //添加新的销售属性
+    addSaleAttr() {
+      //把收集到的数据进行分割，因为有的信息我不需要
+      const [baseSaleAttrId,saleAttrName] = this.attrIdAndAttrName.split(':')
+      //向spu对象的spuSaleAttrList属性里面添加新的销售属性
+      let newSaleAttr = {baseSaleAttrId,saleAttrName,spuSaleAttrValueList:[]}
+      //添加新的销售属性
+      this.spu.spuSaleAttrList.push(newSaleAttr)
     }
   },
   computed: {
