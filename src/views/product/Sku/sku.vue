@@ -185,12 +185,12 @@ export default {
 .el-carousel__item:nth-child(2n+1) {
   background-color: #d3dce6;
 }
-.el-carousel__button{
-  width: 10px;
-  height: 10px;
-  background: red;
-  border-radius: 50%;
-}
+/*.el-carousel__button{*/
+/*  width: 10px;*/
+/*  height: 10px;*/
+/*  background: red;*/
+/*  border-radius: 50%;*/
+/*}*/
   .el-row .el-col-5{
     font-size:18px;
     text-align: right;
@@ -207,5 +207,11 @@ export default {
 }
 .el-col{
   margin: 10px 10px;
+}
+>>>.el-carousel__button{
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
 }
 </style>
