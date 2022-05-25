@@ -55,8 +55,8 @@
       <SpuForm v-show="scene==1" @changeScene="changeScene" ref="spu"></SpuForm>
       <SkuForm v-show="scene==2" ref="sku" @changeScenes="changeScenes"></SkuForm>
     </el-card>
-    <el-dialog :title="`${spu.spuName}的sku列表`" :visible.sync="dialogTableVisible">
-      <el-table :data="skuList" style="width: 100%" border>
+    <el-dialog :title="`${spu.spuName}的sku列表`" :visible.sync="dialogTableVisible" :before-close="close">
+      <el-table :data="skuList" style="width: 100%" border v-loading="loading">
         <el-table-column prop="skuName" label="名称" width="width"></el-table-column>
         <el-table-column prop="price" label="价格" width="width"></el-table-column>
         <el-table-column prop="weight" label="重量" width="width"></el-table-column>
@@ -96,6 +96,7 @@ export default {
       dialogTableVisible:false,
       spu:{},
       skuList:[],//sku列表的数组
+      loading:true,
     }
   },
   methods: {
@@ -193,7 +194,16 @@ export default {
       let result = await this.$API.spu.reqSkuList(spu.id)
       if(result.code==200) {
         this.skuList = result.data
+        this.loading = false
       }
+    },
+    //关闭对话框的回调
+    close(done) {
+      this.loading = true
+      //清除sku列表数据
+      this.skuList = []
+      //关闭对话框
+      done()
     }
   }
 }
