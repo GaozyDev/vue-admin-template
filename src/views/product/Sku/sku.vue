@@ -40,9 +40,10 @@
         label="操作"
         width="width">
         <template slot-scope="{row,$index}">
-          <el-button type="success" icon="el-icon-top" size="mini"></el-button>
-          <el-button type="success" icon="el-icon-bottom" size="mini"></el-button>
-          <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+          <el-button type="success" icon="el-icon-bottom" size="mini" v-if="row.isSale==0"
+                     @click="sale(row)"></el-button>
+          <el-button type="success" icon="el-icon-top" size="mini" v-else @click="cancel(row)"></el-button>
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="edit"></el-button>
           <el-button type="info" icon="el-icon-info" size="mini"></el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
         </template>
@@ -99,6 +100,25 @@ export default {
         this.total = result.data.total
         this.records = result.data.records
       }
+    },
+    //上架
+    async sale(row) {
+      let result = await this.$API.sku.reqSale(row.id)
+      if (result.code == 200) {
+        row.isSale = 1
+        this.$message({type: 'success', message: '上架成功'})
+      }
+    },
+    //下架
+    async cancel(row) {
+      let result = await this.$API.sku.reqCancel(row.id)
+      if (result.code == 200) {
+        row.isSale = 0
+        this.$message({type:'success',message:'下架成功'})
+      }
+    },
+    edit() {
+      this.$message('正在开发中...')
     }
   }
 }
