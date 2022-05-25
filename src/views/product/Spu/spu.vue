@@ -21,7 +21,7 @@
               <!--这些按钮将来会用hintButton进行替换-->
               <hint-button type="success" icon="el-icon-plus" size="mini" title="添加sku" @click="addSku(row)"></hint-button>
               <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改spu" @click="updateSpu(row)"></hint-button>
-              <hint-button type="info" icon="el-icon-info" size="mini"  title="查看当前spu全部sku列表"></hint-button>
+              <hint-button type="info" icon="el-icon-info" size="mini"  title="查看当前spu全部sku列表" @click="handle(row)"></hint-button>
               <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="deleteSpu(row)">
                 <hint-button slot="reference" type="danger" icon="el-icon-delete" size="mini" title="删除spu"></hint-button>
               </el-popconfirm>
@@ -55,6 +55,18 @@
       <SpuForm v-show="scene==1" @changeScene="changeScene" ref="spu"></SpuForm>
       <SkuForm v-show="scene==2" ref="sku" @changeScenes="changeScenes"></SkuForm>
     </el-card>
+    <el-dialog :title="`${spu.spuName}的sku列表`" :visible.sync="dialogTableVisible">
+      <el-table :data="skuList" style="width: 100%" border>
+        <el-table-column prop="skuName" label="名称" width="width"></el-table-column>
+        <el-table-column prop="price" label="价格" width="width"></el-table-column>
+        <el-table-column prop="weight" label="重量" width="width"></el-table-column>
+        <el-table-column label="默认图片" width="width">
+          <template slot-scope="{row,$index}">
+            <img :src="row.skuDefaultImg" style="width: 100px;height: 100px" alt="">
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -62,6 +74,7 @@
 //引入子组件
 import SkuForm from "@/views/product/Spu/SkuForm/SkuForm";
 import SpuForm from "@/views/product/Spu/SpuForm/SpuForm";
+import {reqSkuList} from "@/api/product/spu";
 export default {
   name: 'Spu',
   components:{
@@ -79,6 +92,10 @@ export default {
       records:[],//spu列表的数据
       total:0,//分页器一共需要展示多少条数据
       scene:0,//0:展示spu列表数据 1：添加spu|修改spu 3：添加sku
+      //控制对话框的显示与隐藏
+      dialogTableVisible:false,
+      spu:{},
+      skuList:[],//sku列表的数组
     }
   },
   methods: {
@@ -165,6 +182,18 @@ export default {
     //skuForm通知父组件修改场景
     changeScenes(scene) {
       this.scene = scene
+    },
+    //查看sku按钮的回调
+    async handle(spu) {
+      //点击按钮对话框可见
+      this.dialogTableVisible = true
+      //保存spu信息
+      this.spu = spu
+      //发请求
+      let result = await this.$API.spu.reqSkuList(spu.id)
+      if(result.code==200) {
+        this.skuList = result.data
+      }
     }
   }
 }

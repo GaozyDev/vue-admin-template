@@ -44,3 +44,6 @@ export const reqSpuSaleAttrInfoList = (spuId)=>request({url:`/admin/product/spuS
 // export const reqAttrInfoList = (category1Id,category2Id,category3Id)=>request({url:`/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`,method:'get'})
 //添加sku
 export const reqAddSku = (skuInfo)=>request({url:`/admin/product/saveSkuInfo`,method:'post',data:skuInfo})
+
+//获取sku列表数据
+export const reqSkuList = (spuId)=>request({url:`/admin/product/findBySpuId/${spuId}`,method:'get'})

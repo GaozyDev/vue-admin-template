@@ -235,6 +235,7 @@ export default {
       if(result.code==200) {
         this.$message({type:'success',message:'添加sku成功'})
         this.$emit('changeScenes',0)
+        Object.assign(this._data,this.$options.data())
       }
     }
   }
