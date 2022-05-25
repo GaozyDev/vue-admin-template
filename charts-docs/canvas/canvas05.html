@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>canvas</title>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    /*canvas {*/
+    /*  border: 1px solid red*/
+    /*}*/
+  </style>
+</head>
+<body>
+<!-- 画布的宽度与高度通过属性设置，千万别通过样式去设置 -->
+<canvas width="800" height="420"></canvas>
+</body>
+</html>
+<script>
+    //获取DOM节点
+    let canvas = document.querySelector('canvas')
+    //获取上下文
+    let context = canvas.getContext('2d')
+    //设置文字大小
+    context.font = '16px 微软雅黑'
+    // context.fillStyle = 'red'
+    //绘制文字
+    context.fillText('数据可视化',50,80)
+    //绘制线段
+    context.moveTo(100,100)
+    context.lineTo(100,400)
+    context.lineTo(700,400)
+
+    //绘制其他的线段
+    context.moveTo(100,100)
+    context.lineTo(700,100)
+    context.fillText('150',70,105)
+
+    context.moveTo(100,160)
+    context.lineTo(700,160)
+    context.fillText('120',70,165)
+
+    context.moveTo(100,220)
+    context.lineTo(700,220)
+    context.fillText('90',76,225)
+
+    context.moveTo(100,280)
+    context.lineTo(700,280)
+    context.fillText('60',76,285)
+
+    context.moveTo(100,340)
+    context.lineTo(700,340)
+    context.fillText('30',76,345)
+    context.fillText('0',85,400)
+    context.stroke()
+
+    //绘制水平轴底部线段
+    context.moveTo(250,400)
+    context.lineTo(250,410)
+    //底部的文字
+    context.fillText('食品',160,415)
+
+    context.moveTo(400,400)
+    context.lineTo(400,410)
+    context.fillText('数码',310,415)
+
+    context.moveTo(550,400)
+    context.lineTo(550,410)
+    context.fillText('服饰',450,415)
+    context.fillText('箱包',600,415)
+    context.stroke()
+
+    //绘制矩形
+    context.fillStyle = 'red';
+    context.fillRect(120,300,100,100)
+
+    context.fillStyle = 'red';
+    context.fillRect(270,100,100,300)
+
+    context.fillStyle = 'red';
+    context.fillRect(420,200,100,200)
+
+    context.fillStyle = 'red';
+    context.fillRect(570,180,100,220)
+</script>
