@@ -35,7 +35,7 @@
         </el-form>
       </el-form-item>
       <el-form-item label="图片列表">
-        <el-table style="width: 100%" border>
+        <el-table style="width: 100%" border :data="spuImageList" @selection-change="handleSelectionChange">
           <el-table-column
             type="selection"
             prop=""
@@ -45,9 +45,12 @@
             prop=""
             label="图片"
             width="width">
+            <template slot-scope="{row,$index}">
+              <img :src="row.imgUrl" style="width: 100px;height: 100px">
+            </template>
           </el-table-column>
           <el-table-column
-            prop=""
+            prop="imgName"
             label="名称"
             width="width">
           </el-table-column>
@@ -55,6 +58,10 @@
             prop=""
             label="操作"
             width="width">
+            <template slot-scope="{row,$index}">
+              <el-button type="primary" v-if="row.isDefault==0" @click="changeDefault(row)">设置默认</el-button>
+              <el-button v-else>默认</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </el-form-item>
@@ -121,7 +128,9 @@ export default {
           // }
         ],
       },
-      spu: {}
+      spu: {},
+      //收集图片数据的字段
+      imageList:[]
     }
   },
   methods: {
@@ -135,7 +144,11 @@ export default {
       //获取图片的数据
       let result1 = await this.$API.sku.reqSpuImageList(spu.id)
       if (result1.code == 200) {
-        this.spuImageList = result1.data
+        let list = result1.data
+        list.forEach(item=>{
+          item.isDefault = 0
+        })
+        this.spuImageList = list
       }
       //获取销售属性数据
       let result2 = await this.$API.sku.reqSpuSaleAttrInfoList(spu.id)
@@ -147,6 +160,22 @@ export default {
       if (result3.code == 200) {
         this.attrInfoList = result3.data
       }
+    },
+    //复选框按钮的事件
+    handleSelectionChange(selection) {
+      //获取到用户选中的图片的数据，但是缺少isDefault字段
+      this.imageList = selection
+    },
+    //排他操作
+    changeDefault(row) {
+      //将列表所有的isDefault字段设置为0
+      this.spuImageList.forEach(item=>{
+        item.isDefault = 0
+      })
+      //选中的isDefault字段设置为1
+      row.isDefault = 1
+      //收集默认图片的地址
+      this.skuInfo.skuDefaultImg = row.imgUrl
     }
   }
 }
