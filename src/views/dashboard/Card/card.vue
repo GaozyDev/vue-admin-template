@@ -33,6 +33,9 @@
         <el-card>
           <!--第三个card-->
           <Detail title="支付笔数" count="88460">
+            <template slot="charts">
+              <barChart></barChart>
+            </template>
             <template slot="footer">
               <span>转化率 65%</span>
             </template>
@@ -56,13 +59,15 @@
 </template>
 
 <script>
+import barChart from "@/views/dashboard/Card/barChart/barChart";
 import lineChart from "@/views/dashboard/Card/lineChart/lineChart";
 import Detail from "@/views/dashboard/Card/Detail/detail";
 export default {
   name: 'Card',
   components:{
     Detail,
-    lineChart
+    lineChart,
+    barChart
   }
 }
 </script>
