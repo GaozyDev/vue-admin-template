@@ -29,17 +29,22 @@
   //初始化echarts实例
   let mycharts = echarts.init(dom)
   //配置数据
+  //一个坐标系:散点图
   mycharts.setOption({
+    //标题
     title:{
       text:'一个坐标系'
     },
+    //x轴
     xAxis:{
       type:'category'
     },
     yAxis:{},
+    //散点图
     series:[
       {
         type:'scatter',
+        //散点图的数据
         data:[
           [10,20],
           [15,25],
