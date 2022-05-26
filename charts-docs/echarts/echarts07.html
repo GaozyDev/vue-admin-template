@@ -29,28 +29,42 @@
   //初始化echarts实例
   let mycharts = echarts.init(dom)
   //配置数据
-  //一个坐标系:散点图
+  //双坐标系
   mycharts.setOption({
-    //标题
-    title:{
-      text:'一个坐标系'
+    title: {
+      text: '双坐标',
     },
-    //x轴
-    xAxis:{
-      type:'category'
+    xAxis: {
+      data: ['游戏', '直播', '经济', '娱乐']
     },
-    yAxis:{},
-    //散点图
-    series:[
+    yAxis: [
       {
-        type:'scatter',
-        //散点图的数据
-        data:[
-          [10,20],
-          [15,25],
-          [45,56],
-          [78,10]
-        ]
+        axisLine: {
+          show: true
+        },
+        axisTick: {
+          show: true
+        }
+      },
+      {
+        axisLine: {
+          show: true
+        },
+        axisTick: {
+          show: true
+        }
+      }
+    ],
+    series: [
+      {
+        type: 'line',
+        data: [10, 20, 30, 30],
+        yAxisIndex:0
+      },
+      {
+        type: 'bar',
+        data: [12, 15, 45, 99],
+        yAxisIndex:1
       }
     ]
   })
