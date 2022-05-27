@@ -79,6 +79,7 @@
 //引入echarts
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
+import {mapState} from 'vuex'
 export default {
   name: 'Sale',
   data() {
@@ -112,7 +113,7 @@ export default {
       xAxis: [
         {
           type: 'category',
-          data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+          data: [],
           axisTick: {
             alignWithLabel: true
           }
@@ -128,7 +129,7 @@ export default {
           name: 'Direct',
           type: 'bar',
           barWidth: '60%',
-          data: [10, 52, 200, 334, 390, 330, 220, 110, 130, 249, 124, 456]
+          data: []
         }
       ]
     })
@@ -141,7 +142,60 @@ export default {
       this.myCharts.setOption({
         title: {
           text:this.title+'趋势'
-        }
+        },
+        xAxis:{
+          data:this.title=='销售额'?this.listState.orderFullYearAxis:this.listState.userFullYearAxis
+        },
+        series: [
+          {
+            name: 'Direct',
+            type: 'bar',
+            barWidth: '60%',
+            data:this.title=='销售额'?this.listState.orderFullYear:this.listState.userFullYear
+          }
+        ]
+      })
+    },
+    //顶部是mounted，为什么第一次没有数据？因为data:[]都是空得，所以没有数据
+    listState(){
+      this.myCharts.setOption({
+        title: {
+          text: this.title+'趋势'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: this.listState.orderFullYearAxis,
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: 'Direct',
+            type: 'bar',
+            barWidth: '60%',
+            data: this.listState.orderFullYear
+          }
+        ]
       })
     }
   },
@@ -149,7 +203,10 @@ export default {
     //计算属性-标题
     title() {
       return this.activeName=='Sale'?'销售额':'访问量'
-    }
+    },
+    ...mapState({
+      listState:state=>state.home.list
+    })
   },
   methods: {
     //本天
