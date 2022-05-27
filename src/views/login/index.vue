@@ -83,8 +83,8 @@ export default {
         password: '111111'
       },
       loginRules: {
-        username: [{required: true, trigger: 'blur', validator: validateUsername}],
-        password: [{required: true, trigger: 'blur', validator: validatePassword}]
+        // username: [{required: true, trigger: 'blur', validator: validateUsername}],
+        // password: [{required: true, trigger: 'blur', validator: validatePassword}]
       },
       loading: false,
       passwordType: 'password',
@@ -115,7 +115,7 @@ export default {
       //这里是在验证表单元素（用户名与密码）是否符合规则
       this.$refs.loginForm.validate(valid => {
         //如果符合规则
-        if (!valid) {
+        if (valid) {
           //按钮会有一个loading的效果
           this.loading = true
           //派发一个action：user/login，带着用户名与密码的载荷

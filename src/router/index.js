@@ -30,6 +30,7 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+//常量路由：不管什么角色都可以使用，比如登录、404、首页
 export const constantRoutes = [
   {
     path: '/login',
@@ -54,6 +55,10 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+]
+
+//异步路由：分角色，不同人来看到的东西不一样
+export const asyncRoutes = [
   {
     name: 'Acl',
     path: '/acl',
@@ -132,9 +137,15 @@ export const constantRoutes = [
       },
     ]
   },
+]
+
+//任意路由：
+export const anyRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
+
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

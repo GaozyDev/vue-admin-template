@@ -1,15 +1,18 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
+import { resetRouter,asyncRoutes,constantRoutes} from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
     avatar: '',
+    //服务器返回的菜单信息【根据不同是的角色，返回的标记信息】
     routes:[],
     roles:[],
-    buttons:[]
+    buttons:[],
+    //对比之后【项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的路由】
+    resultAsyncRoutes:[]
   }
 }
 
@@ -29,7 +32,26 @@ const mutations = {
     state.routes = userInfo.routes
     state.buttons = userInfo.buttons
     state.roles = userInfo.roles
+  },
+  //最终计算出的异步路由
+  SET_RESULTASYNCROUTES(state,asyncRoutes) {
+    state.resultAsyncRoutes = asyncRoutes
   }
+}
+
+//定义一个函数：两个数组进行对比，对比当前用户到底显示哪些异步路由
+const computedAsyncRoutes = (asyncRoutes,routes)=>{
+  //过滤出当前用户需要展示的异步路由
+   return asyncRoutes.filter(item=>{
+    //数组当中没有这个元素就返回-1，有此元素就不返回-1
+    if(routes.indexOf(item.name)!=-1){
+      //递归：可能还会有2、3、4、5、6级路由
+      if(item.children&&item.children.length){
+        item.children = computedAsyncRoutes(item.children,routes)
+      }
+      return true
+    }
+  })
 }
 
 const actions = {
@@ -65,6 +87,7 @@ const actions = {
         const { data } = response
         //vuex存储用户全部信息
         commit('SET_USERINFO',data)
+        commit('SET_RESULTASYNCROUTES',computedAsyncRoutes(asyncRoutes,data.routes))
         resolve(data)
       }).catch(error => {
         reject(error)
