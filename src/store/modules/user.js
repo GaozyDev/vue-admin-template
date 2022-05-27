@@ -1,6 +1,8 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter,asyncRoutes,constantRoutes} from '@/router'
+import { resetRouter,asyncRoutes,constantRoutes,anyRoutes} from '@/router'
+import router from '@/router'
+import cloneDeep from 'lodash/cloneDeep'
 
 const getDefaultState = () => {
   return {
@@ -12,7 +14,9 @@ const getDefaultState = () => {
     roles:[],
     buttons:[],
     //对比之后【项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的路由】
-    resultAsyncRoutes:[]
+    resultAsyncRoutes:[],
+    //用户最终需要展示的全部路由
+    resultAllRoutes:[],
   }
 }
 
@@ -34,8 +38,13 @@ const mutations = {
     state.roles = userInfo.roles
   },
   //最终计算出的异步路由
-  SET_RESULTASYNCROUTES(state,asyncRoutes) {
+  SET_RESULTASYNCROUTES:(state,asyncRoutes)=> {
     state.resultAsyncRoutes = asyncRoutes
+    //计算出当前用户需要展示的所有路由
+    state.resultAllRoutes = constantRoutes.concat(state.resultAsyncRoutes,anyRoutes)
+
+    //给路由器添加新的路由
+    router.addRoutes((state.resultAllRoutes))
   }
 }
 
@@ -68,16 +77,6 @@ const actions = {
     }else {
       return Promise.reject(new Error('faile'))
     }
-    // return new Promise((resolve, reject) => {
-    //   login({ username: username.trim(), password: password }).then(response => {
-    //     const { data } = response
-    //     commit('SET_TOKEN', data.token)
-    //     setToken(data.token)
-    //     resolve()
-    //   }).catch(error => {
-    //     reject(error)
-    //   })
-    // })
   },
 
   // 获取用户信息
@@ -87,7 +86,7 @@ const actions = {
         const { data } = response
         //vuex存储用户全部信息
         commit('SET_USERINFO',data)
-        commit('SET_RESULTASYNCROUTES',computedAsyncRoutes(asyncRoutes,data.routes))
+        commit('SET_RESULTASYNCROUTES',computedAsyncRoutes(cloneDeep(asyncRoutes),data.routes))
         resolve(data)
       }).catch(error => {
         reject(error)
