@@ -6,7 +6,10 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    routes:[],
+    roles:[],
+    buttons:[]
   }
 }
 
@@ -19,11 +22,13 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  //存储用户信息
+  SET_USERINFO: (state,userInfo)=>{
+    state.name = userInfo.name
+    state.avatar = userInfo.avatar
+    state.routes = userInfo.routes
+    state.buttons = userInfo.buttons
+    state.roles = userInfo.roles
   }
 }
 
@@ -53,20 +58,13 @@ const actions = {
     // })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
-
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        //vuex存储用户全部信息
+        commit('SET_USERINFO',data)
         resolve(data)
       }).catch(error => {
         reject(error)
